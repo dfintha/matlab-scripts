@@ -1,0 +1,12 @@
+MATLAB Script Repository
+========================
+
+This repository contains my MATLAB scripts, that I've written. All the scripts
+support (and were tested on) both Mathworks MATLAB and GNU Octave.
+
+For the scripts using HHM files, some examples are available in the 'hhm'
+directory to test with.
+
+The following scripts are stored in this repository.
+- hhmbinread.m: Reads a HHM binary file into a structure.
+- processecg.m: Process and plot an ECG signal read from a HHM binary file.
