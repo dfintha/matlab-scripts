@@ -53,13 +53,13 @@ ecg = filtfilt(B, A, ecg) - baseline;
 min_rr = 250; % [ms] Refraction time (minimum between action potentials).
 min_mv = 120; % [mV] Approximate minimal R peak voltage.
 if is_octave
-    [~, r_peaks] = findpeaks(max(ecg, 0), ...
-                             'MinPeakDistance', min_rr, ...
-                             'MinPeakHeight', min_mv);
+    ecg_r_find = max(ecg, 0);
 else
-    [~, r_peaks] = findpeaks(ecg, ...
-                             'MinPeakDistance', min_rr, ...
-                             'MinPeakHeight', min_mv);
+    ecg_r_find = ecg;
+end
+[~, r_peaks] = findpeaks(ecg_r_find, ...
+                         'MinPeakDistance', min_rr, ...
+                         'MinPeakHeight', min_mv);
 end
 
 % Plot the processed ECG signal with the detected R peaks, and vertical
