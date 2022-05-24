@@ -60,6 +60,16 @@ end
 [~, r_peaks] = findpeaks(ecg_r_find, ...
                          'MinPeakDistance', min_rr, ...
                          'MinPeakHeight', min_mv);
+
+% Detect P waves.
+p_waves = zeros(length(r_peaks) - 2, 1);
+min_pr = 100; % [ms] Approximate minimal P-R distance.
+min_rt = 200; % [ms] Approximate minimal R-T distance.
+for i = 2:(length(r_peaks) - 1)
+    start = r_peaks(i) + min_rt;
+    finish = r_peaks(i + 1) - min_pr;
+    [local_min, ~] = findminmax(ecg(start:finish));
+    p_waves(i - 1) = fix(local_min + start);
 end
 
 % Plot the processed ECG signal with the detected R peaks, and vertical
@@ -69,6 +79,7 @@ plot(ecg, 'b-');
 hold on;
 grid minor;
 plot(r_peaks, ecg(r_peaks), 'rx', 'LineWidth', 5);
+plot(p_waves, ecg(p_waves), 'mx', 'LineWidth', 5);
 title('Processed ECG Signal');
 xlabel('Time [ms]');
 ylabel('Voltage [mV]');
@@ -80,4 +91,4 @@ for i = 1:length(r_peaks)
     y_values = [plot_bottom, plot_top];
     plot(x_values, y_values, 'Color', [0.75, 0.75, 0.75]);
 end
-legend('ECG Signal', 'R Peaks');
+legend('ECG Signal', 'R Peaks', 'P Waves');
