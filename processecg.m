@@ -45,7 +45,7 @@ f_baseline = 2; % [Hz] Maximal frequency of baseline movement.
 baseline = filtfilt(B, A, ecg);
 
 % Smooth the signal with a LPF, and subtract the baseline from it.
-f_lpf = 25; % [Hz] Szűrési frekvencia.
+f_lpf = 25; % [Hz] Low-pass filter frequency.
 [B, A] = butter(3, f_lpf / f_sampling, 'low');
 ecg = filtfilt(B, A, ecg) - baseline;
 
@@ -72,8 +72,7 @@ for i = 2:(length(r_peaks) - 1)
     p_waves(i - 1) = fix(local_min + start);
 end
 
-% Plot the processed ECG signal with the detected R peaks, and vertical
-% lines at the R peaks to indicate heart rate (RR lengths).
+% Plot the processed ECG signal with the detected R peaks and P waves.
 figure;
 plot(ecg, 'b-');
 hold on;
@@ -86,9 +85,4 @@ ylabel('Voltage [mV]');
 plot_top = max(ecg) * 1.2;
 plot_bottom = min(ecg) * 1.2;
 axis([0, length(ecg), plot_bottom, plot_top]);
-for i = 1:length(r_peaks)
-    x_values = [r_peaks(i), r_peaks(i)];
-    y_values = [plot_bottom, plot_top];
-    plot(x_values, y_values, 'Color', [0.75, 0.75, 0.75]);
-end
 legend('ECG Signal', 'R Peaks', 'P Waves');
