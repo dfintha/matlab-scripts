@@ -16,24 +16,45 @@ if is_octave
 end
 
 % Load the HHM reading.
-[file , directory] = uigetfile('*.hhm');
+[file , directory] = uigetfile('*.hhm', 'processecg');
 if file == 0
     return
 end
 filename = strcat(directory, file);
 reading = hhmbinread(filename, 2);
 
+% Ask the user if they want to use the dark mode, and set the palette.
+dark_mode = questdlg('Would you like to use dark mode for ECG plots?', ...
+                     'processecg', 'Yes', 'No', 'No');
+if strcmp(dark_mode, 'Yes')
+    plot_background_color = 'k';
+    plot_foreground_color = 'w';
+    ecg_signal_color = 'g-';
+    r_peak_color = 'wx';
+    p_wave_color = 'yx';
+else
+    plot_background_color = 'w';
+    plot_foreground_color = 'k';
+    ecg_signal_color = 'b-';
+    r_peak_color = 'rx';
+    p_wave_color = 'mx';
+end
+
 % Draw the raw ECG signal.
 figure;
-plot(reading.ecg1);
+plot(reading.ecg1, ecg_signal_color);
 grid minor;
 title('Raw ECG Signal');
 xlabel('Time [ms]');
 ylabel('Voltage [mV]');
-legend('ECG Signal');
+plot_legend = legend('ECG Signal');
 plot_top = max(reading.ecg1) * 1.2;
 plot_bottom = min(reading.ecg1) * 1.2;
 axis([0, length(reading.ecg1), plot_bottom, plot_top]);
+set(gca, 'Color', plot_background_color);
+set(plot_legend, 'Color', plot_background_color);
+set(plot_legend, 'TextColor', plot_foreground_color);
+set(plot_legend, 'EdgeColor', plot_background_color);
 
 % Detach the DC component.
 ecg = reading.ecg1 - mean(reading.ecg1);
@@ -74,15 +95,19 @@ end
 
 % Plot the processed ECG signal with the detected R peaks and P waves.
 figure;
-plot(ecg, 'b-');
+plot(ecg, ecg_signal_color);
 hold on;
 grid minor;
-plot(r_peaks, ecg(r_peaks), 'rx', 'LineWidth', 5);
-plot(p_waves, ecg(p_waves), 'mx', 'LineWidth', 5);
+plot(r_peaks, ecg(r_peaks), r_peak_color, 'LineWidth', 5);
+plot(p_waves, ecg(p_waves), p_wave_color, 'LineWidth', 5);
 title('Processed ECG Signal');
 xlabel('Time [ms]');
 ylabel('Voltage [mV]');
+plot_legend = legend('ECG Signal', 'R Peaks', 'P Waves');
+axis([0, length(ecg), plot_bottom, plot_top]);
 plot_top = max(ecg) * 1.2;
 plot_bottom = min(ecg) * 1.2;
-axis([0, length(ecg), plot_bottom, plot_top]);
-legend('ECG Signal', 'R Peaks', 'P Waves');
+set(gca, 'Color', plot_background_color);
+set(plot_legend, 'Color', plot_background_color);
+set(plot_legend, 'TextColor', plot_foreground_color);
+set(plot_legend, 'EdgeColor', plot_background_color);
