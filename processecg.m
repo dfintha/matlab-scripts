@@ -21,7 +21,7 @@ if file == 0
     return
 end
 filename = strcat(directory, file);
-reading = hhmbinread(filename);
+reading = hhmbinread(filename, 2);
 
 % Draw the raw ECG signal.
 figure;
@@ -51,7 +51,7 @@ ecg = filtfilt(B, A, ecg) - baseline;
 
 % Detect the R peaks.
 min_rr = 250; % [ms] Refraction time (minimum between action potentials).
-min_mv = 120; % [mV] Approximate minimal R peak voltage.
+min_mv = 0.1; % [mV] Approximate minimal R peak voltage.
 if is_octave
     ecg_r_find = max(ecg, 0);
 else
