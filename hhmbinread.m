@@ -60,6 +60,8 @@ function reading = hhmbinread(filename, machine)
     reading.ppgl_nir = buffer(8:8:end);
     reading.machine = machine;
 
+    reading.press = (reading.press - 175) / 15.5;
+
     if machine == 2
         reading.ecg1 = 3.3 / 4096 * (reading.ecg1 - 2048);
     elseif machine == 1
