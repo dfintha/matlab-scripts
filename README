@@ -13,3 +13,5 @@ The following functions are stored in this repository.
 
 The following scripts are stored in this repository.
 - processecg.m: Process and plot an ECG signal read from a HHM binary file.
+- bloodpressure.m: Process a PPG signal and find the systolic blood pressure
+                   based on the cuff pressure and the amplitude of the PPG wave.
