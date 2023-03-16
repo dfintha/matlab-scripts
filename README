@@ -10,6 +10,7 @@ directory to test with.
 The following functions are stored in this repository.
 - hhmbinread.m: Function to read a HHM binary file into a structure.
 - findminmax.m: Function to find local minimum and maximum in a range.
+- curvefit.m: Function to fit and calculate a polynomial curve.
 
 The following scripts are stored in this repository.
 - processecg.m: Process and plot an ECG signal read from a HHM binary file.
